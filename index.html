@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="description" content="HARTAZ — Property Consultant">
+<title>HARTAZ | Property Consultant</title>
+<style>
+:root{
+  --black:#111;
+  --gold:#d6a84f;
+  --gold2:#f0d28c;
+  --cream:#f7f4ed;
+  --white:#fff;
+  --muted:#777;
+  --line:#e7e1d5;
+  --green:#20a866;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--cream);color:var(--black);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(#c8bfae .45px,transparent .45px);
+  background-size:6px 6px;
+}
+.container{position:relative;width:min(620px,92%);margin:auto;padding:26px 0 40px}
+.profile{text-align:center;padding:10px 0 23px}
+.logo{
+  width:94px;height:94px;margin:0 auto 16px;border-radius:50%;
+  background:linear-gradient(145deg,#0d0d0d,#292929);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(214,168,79,.55);
+  box-shadow:0 15px 35px rgba(0,0,0,.16);
+}
+.logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}.logo span{
+  color:var(--gold);font-size:28px;font-weight:900;
+  letter-spacing:3px;border:1px solid var(--gold);
+  width:57px;height:57px;border-radius:17px;
+  display:flex;align-items:center;justify-content:center;
+}
+h1{font-size:29px;margin:0;font-weight:850;letter-spacing:2px}
+.tagline{font-size:13px;color:var(--muted);margin:5px 0 15px;letter-spacing:.5px}
+.socials{display:flex;justify-content:center;gap:9px}
+.socials a{
+  width:36px;height:36px;border-radius:50%;background:#fff;
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:#222;font-size:12px;font-weight:800;
+  transition:.2s;
+}
+.socials a:hover{transform:translateY(-2px);border-color:var(--gold)}
+.socials a svg{width:17px;height:17px;display:block}
+.section-title{
+  display:flex;align-items:center;gap:10px;margin:10px 2px 11px;
+  font-size:11px;letter-spacing:1.6px;font-weight:850;color:#777;
+  text-transform:uppercase;
+}
+.section-title:after{content:"";height:1px;background:var(--line);flex:1}
+.links{display:grid;gap:10px}
+.link{
+  min-height:64px;padding:11px 14px;border-radius:17px;background:#fff;
+  border:1px solid var(--line);display:flex;align-items:center;gap:13px;
+  color:var(--black);text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.035);
+  transition:.2s ease;
+}
+.link:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(0,0,0,.08);border-color:#d7c79f}
+.link.featured{
+  background:linear-gradient(135deg,#111,#262626);color:#fff;border-color:#292929;
+}
+.link.featured .icon{background:rgba(214,168,79,.16);color:var(--gold2)}
+.icon{
+  flex:0 0 41px;width:41px;height:41px;border-radius:13px;
+  background:#f4f0e8;display:flex;align-items:center;justify-content:center;font-size:19px;
+}
+.link strong{font-size:14px;display:block}
+.link small{display:block;color:var(--muted);margin-top:3px;font-size:11px}
+.link.featured small{color:#aaa}
+.arrow{margin-left:auto;color:#aaa;font-size:22px;line-height:1}
+.property{
+  background:#fff;border:1px solid var(--line);border-radius:20px;
+  overflow:hidden;margin-bottom:13px;box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+.photo-wrap{position:relative}
+.property img{display:block;width:100%;height:215px;object-fit:cover}
+.status{
+  position:absolute;top:12px;left:12px;padding:6px 9px;border-radius:999px;
+  background:rgba(255,255,255,.94);font-size:10px;font-weight:900;letter-spacing:.5px;
+}
+.status.available{color:#16814d}
+.property-body{padding:15px}
+.property h2{font-size:18px;margin:2px 0 4px}
+.location{font-size:12px;color:var(--muted)}
+.price{font-size:19px;font-weight:900;margin-top:9px}
+.price span{font-size:11px;color:var(--muted);font-weight:500}
+.details{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.detail{
+  font-size:11px;background:#f7f4ed;border-radius:8px;padding:6px 8px;color:#555
+}
+.actions{display:flex;gap:8px;margin-top:13px}
+.btn{
+  flex:1;padding:11px;border-radius:11px;text-align:center;text-decoration:none;
+  font-size:12px;font-weight:800;transition:.2s;
+}
+.btn.primary{background:#111;color:#fff}
+.btn.secondary{background:#f3efe6;color:#222}
+.btn.whatsapp{background:var(--green);color:#fff}
+.btn:hover{transform:translateY(-1px)}
+.more{
+  display:block;text-align:center;text-decoration:none;color:#555;
+  font-size:12px;font-weight:700;padding:12px;margin-bottom:8px;
+}
+.footer{text-align:center;color:#999;font-size:10px;margin-top:26px;line-height:1.7}
+</style>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+const SUPABASE_URL="https://jiqequbogmshxohzicfn.supabase.co";
+const SUPABASE_KEY="sb_publishable_hHvfFEhVBd7YAXKcxcde5w_-ZqjMz19";
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function track(event_type, extra={}){
+  try{ await supabase.from("analytics_events").insert([{event_type,...extra}]); }catch(e){console.warn("Analytics error",e)}
+}
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+const money=v=>v==null?"":Number(v).toLocaleString("en-MY",{maximumFractionDigits:0});
+
+function renderLinks(rows){
+  const box=document.getElementById("dynamic-links");
+  if(!rows?.length){box.innerHTML='<div style="color:#777;font-size:12px;padding:10px 2px">Belum ada link.</div>';return;}
+  box.innerHTML=rows.map((l,i)=>`<a class="link ${i===0?'featured':''}" href="${esc(l.url)}" ${/^https?:\/\//.test(l.url)?'target="_blank" rel="noopener"':''} data-link-id="${l.id}" data-url="${esc(l.url)}"><span class="icon">${esc(l.icon||'🔗')}</span><span><strong>${esc(l.title)}</strong><small>${esc(l.subtitle||'')}</small></span><span class="arrow">›</span></a>`).join("");
+  box.querySelectorAll(".link").forEach(a=>a.addEventListener("click",()=>{
+    const url=a.dataset.url||"";
+    if(url.includes("wa.me")) track("whatsapp_click",{link_id:a.dataset.linkId});
+    else if(url!=="#") track("link_click",{link_id:a.dataset.linkId});
+  }));
+}
+
+function renderProperties(rows){
+  const box=document.getElementById("dynamic-properties");
+  if(!rows?.length){box.innerHTML='<div style="color:#777;font-size:12px;padding:10px 2px">Belum ada featured property.</div>';return;}
+  box.innerHTML=rows.map(p=>`<article class="property"><div class="photo-wrap"><img src="${esc(p.image_url||'')}" alt="${esc(p.title)}"><span class="status ${p.status==='Available'?'available':''}">● ${esc(String(p.status||'').toUpperCase())}</span></div><div class="property-body"><h2>${esc(p.title)}</h2><div class="location">📍 ${esc(p.location||'')}</div><div class="price">RM${money(p.price)} <span>bermula dari</span></div><div class="details">${p.bedrooms!=null?`<span class="detail">🛏 ${p.bedrooms} Bilik</span>`:''}${p.bathrooms!=null?`<span class="detail">🚿 ${p.bathrooms} Bilik Air</span>`:''}${p.property_type?`<span class="detail">🏡 ${esc(p.property_type)}</span>`:''}</div><div class="actions"><a class="btn primary" href="${esc(p.details_url||'#')}" data-property-id="${p.id}">View Details</a><a class="btn whatsapp" href="${esc(p.whatsapp_url||'#')}" target="_blank" rel="noopener" data-property-id="${p.id}" data-wa="1">WhatsApp</a></div></div></article>`).join("");
+  box.querySelectorAll(".btn").forEach(a=>a.addEventListener("click",()=>{
+    const id=a.dataset.propertyId;
+    if(a.dataset.wa==='1') track("whatsapp_click",{property_id:id});
+    else track("property_view",{property_id:id});
+  }));
+}
+
+async function loadSiteSettings(){
+  const {data:s,error}=await supabase.from("site_settings").select("*").eq("id",1).maybeSingle();
+  if(error||!s) return;
+
+  document.title=`${s.site_title||"HARTAZ"} | Property Consultant`;
+  const h1=document.querySelector(".profile h1");
+  const tagline=document.querySelector(".profile .tagline");
+  const logo=document.querySelector(".profile .logo");
+  if(h1) h1.textContent=s.site_title||"HARTAZ";
+  if(tagline) tagline.textContent=s.tagline||"PROPERTY CONSULTANT";
+
+  if(logo){
+    if(s.logo_url){
+      logo.innerHTML=`<img src="${esc(s.logo_url)}" alt="${esc(s.site_title||"Logo")}">`;
+      logo.style.padding="0";
+    }else{
+      logo.innerHTML=`<span>${esc(s.logo_text||"H")}</span>`;
+      logo.style.padding="";
+    }
+  }
+
+  await loadSocialLinks();
+}
+
+function socialIcon(platform){
+  const p=String(platform||'').toLowerCase();
+  const common='fill="currentColor"';
+  if(p==='tiktok') return `<svg viewBox="0 0 24 24" ${common}><path d="M16.7 3c.4 2.4 1.8 3.8 4.3 4v3.1c-1.6.1-3.1-.4-4.3-1.3v6.3c0 4-2.8 6.6-6.5 6.6-3.5 0-6.2-2.6-6.2-6 0-3.7 3-6.3 6.7-6.1v3.2c-1.8-.2-3.3.9-3.3 2.8 0 1.5 1.2 2.8 2.8 2.8 1.8 0 3.1-1.2 3.1-3.5V3h3.4z"/></svg>`;
+  if(p==='instagram') return `<svg viewBox="0 0 24 24" ${common}><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.7" r="1.2"/></svg>`;
+  if(p==='facebook') return `<svg viewBox="0 0 24 24" ${common}><path d="M13.7 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5H17V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.5v3h2.8v8h3.4z"/></svg>`;
+  if(p==='youtube') return `<svg viewBox="0 0 24 24" ${common}><path d="M21.6 7.1a2.8 2.8 0 0 0-2-2C17.8 4.6 12 4.6 12 4.6s-5.8 0-7.6.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 2 12a29 29 0 0 0 .4 4.9 2.8 2.8 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 22 12a29 29 0 0 0-.4-4.9zM10 15.5v-7l6 3.5-6 3.5z"/></svg>`;
+  if(p==='whatsapp') return `<svg viewBox="0 0 24 24" ${common}><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 .1 5.3.1 11.9c0 2.1.6 4.1 1.6 5.9L0 24l6.4-1.7a11.9 11.9 0 0 0 5.6 1.4h.1c6.5 0 11.8-5.3 11.8-11.9 0-3.2-1.2-6.1-3.4-8.3zM12 21.2h-.1a9.4 9.4 0 0 1-4.8-1.3l-.3-.2-3.8 1 1-3.7-.2-.3a9.4 9.4 0 0 1-1.4-4.9C2.4 6.7 6.7 2.5 12 2.5c2.5 0 4.8 1 6.6 2.7a9.4 9.4 0 0 1 2.7 6.6c0 5.2-4.2 9.4-9.3 9.4zm5.2-7.1c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-.3-.2-1.2-.4-2.2-1.4-.8-.7-1.4-1.7-1.5-2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.6-.9-2.1-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1.8.3 1.4.5 1.9.6.8.3 1.6.2 2.2.1.7-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.1-1.3-.1-.1-.3-.2-.6-.3z"/></svg>`;
+  if(p==='telegram') return `<svg viewBox="0 0 24 24" ${common}><path d="M21.7 3.5 18.5 20c-.2 1.2-.9 1.5-1.8.9l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6 13.8l-4.8-1.5c-1-.3-1-1 .2-1.5L20.2 3c.8-.3 1.5.2 1.5.5z"/></svg>`;
+  if(p==='linkedin') return `<svg viewBox="0 0 24 24" ${common}><path d="M4.7 3.5A2.3 2.3 0 1 1 4.7 8a2.3 2.3 0 0 1 0-4.5zM2.7 9.5h4v11.8h-4V9.5zm6.5 0H13v1.6h.1c.6-1.1 2-2.2 4.1-2.2 4.4 0 5.2 2.9 5.2 6.7v5.7h-4v-5.1c0-1.2 0-3.5-2.2-3.5s-2.5 1.7-2.5 3.4v5.2h-4V9.5z"/></svg>`;
+  if(p==='x') return `<svg viewBox="0 0 24 24" ${common}><path d="M18.3 2h3.6l-7.9 9 9.3 11h-7.3l-5.7-6.8L4.4 22H.8l8.4-9.6L.3 2h7.5l5.2 6.1L18.3 2zm-1.3 18h2L6.4 4H4.3L17 20z"/></svg>`;
+  if(p==='threads') return `<svg viewBox="0 0 24 24" ${common}><path d="M17.8 11.2c-.2-4.3-2.7-6.7-6.8-6.7-4.4 0-6.9 2.4-7.2 6.2h3.1c.3-2.1 1.6-3.2 4-3.2 2.2 0 3.5 1.1 3.8 3.1-1.1-.2-2.2-.3-3.4-.3-4.3 0-6.7 2-6.7 5.3 0 3.3 2.6 5.5 6.4 5.5 3.7 0 6.1-1.9 6.6-5.2 1.2.7 1.8 1.7 1.8 3 0 2.1-1.8 3.5-4.8 3.5-3.2 0-5.5-1.4-6.4-4.1H5.1c.9 4.3 4.2 6.8 9.4 6.8 4.9 0 8-2.4 8-6.2 0-2.8-1.5-4.9-4.7-6.1zm-6.5 6.8c-2 0-3.3-.9-3.3-2.3 0-1.5 1.2-2.2 3.5-2.2 1.1 0 2.1.1 3.2.3-.2 2.8-1.3 4.2-3.4 4.2z"/></svg>`;
+  if(p==='pinterest') return `<svg viewBox="0 0 24 24" ${common}><path d="M12.3 2C7.2 2 4 5.7 4 9.7c0 2.3.9 4.3 2.8 5.1.3.1.5 0 .6-.3l.3-1.1c.1-.3 0-.4-.2-.7-.6-.7-1-1.6-1-2.9 0-3.7 2.8-6.2 6.6-6.2 3.6 0 5.6 2.2 5.6 5.1 0 3.8-1.7 7-4.3 7-1.4 0-2.5-1.2-2.2-2.6.4-1.7 1.2-3.6 1.2-4.8 0-1.1-.6-2-1.8-2-1.4 0-2.5 1.4-2.5 3.2 0 1.2.4 2 .4 2s-1.4 5.9-1.7 7c-.5 2.1-.1 4.7 0 5l.2.1c.1 0 .1-.1.2-.2.1-.2 1.7-2.1 2.3-4.1.2-.6 1-3.7 1-3.7.5 1 1.9 1.9 3.5 1.9 4.6 0 7.7-4.2 7.7-9.8C20.6 5.9 17.1 2 12.3 2z"/></svg>`;
+  return `<svg viewBox="0 0 24 24" ${common}><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+}
+
+async function loadSocialLinks(){
+  const {data,error}=await supabase.from("social_links").select("id,platform,label,url,sort_order").eq("enabled",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true});
+  const box=document.querySelector(".socials");
+  if(!box)return;
+  if(error||!data?.length){box.innerHTML="";return;}
+  box.innerHTML=data.map(r=>`<a href="${esc(r.url)}" aria-label="${esc(r.label||r.platform)}" target="_blank" rel="noopener" data-social-id="${r.id}">${socialIcon(r.platform)}</a>`).join("");
+  box.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>track("link_click",{social_link_id:a.dataset.socialId})));
+}
+
+async function loadPage(){
+  track("page_view");
+  await loadSiteSettings();
+  const [{data:links},{data:props}] = await Promise.all([
+    supabase.from("links").select("id,title,subtitle,url,icon,sort_order").eq("enabled",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
+    supabase.from("properties").select("id,title,location,price,status,bedrooms,bathrooms,property_type,image_url,whatsapp_url,details_url,featured").eq("featured",true).order("created_at",{ascending:false})
+  ]);
+  renderLinks(links||[]); renderProperties(props||[]);
+}
+
+document.addEventListener("DOMContentLoaded",loadPage);
+</script>
+
+</head>
+<body>
+<main class="container">
+
+  <section class="profile">
+    <div class="logo"><span>H</span></div>
+    <h1>HARTAZ</h1>
+    <p class="tagline">PROPERTY CONSULTANT</p>
+    <div class="socials"></div>
+  </section>
+
+  <div class="section-title">Quick Links</div>
+  <section id="dynamic-links" class="links"></section>
+
+  <div id="featured-properties" class="section-title" style="margin-top:27px">Featured Property</div>
+  <section id="dynamic-properties"></section>
+
+  <a class="more" href="#">View All Properties →</a>
+
+  <footer class="footer">
+    HARTAZ © 2026<br>
+    Property Consultant
+  </footer>
+</main>
+</body>
+</html>
