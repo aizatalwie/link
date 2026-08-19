@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARTAZ Admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f2eb;color:#151515;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.wrap{width:min(1050px,94%);margin:auto;padding:28px 0 50px}
+.login{width:min(400px,100%);margin:10vh auto;background:#fff;border:1px solid #e6dfd3;border-radius:20px;padding:25px;box-shadow:0 15px 40px #0000000b}
+.brand{font-weight:900;letter-spacing:2px}.sub{color:#777;font-size:12px;margin-top:4px}
+input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin-top:8px;font-size:14px}
+label{display:block;font-size:12px;font-weight:700;margin-top:15px}
+button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:800}
+.primary{background:#151515;color:#fff;width:100%;margin-top:17px}
+.error{color:#b51f2b;font-size:12px;margin-top:10px}
+.hidden{display:none!important}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.logout{border:1px solid #ddd;background:#fff}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card,.panel{background:#fff;border:1px solid #e6dfd3;border-radius:17px}
+.card{padding:17px}.label{font-size:11px;color:#777;text-transform:uppercase;letter-spacing:1px}.num{font-size:28px;font-weight:900;margin-top:7px}
+.panel{padding:18px;margin-top:15px}.panel h2{font-size:15px;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;font-size:13px}
+.row:last-child{border-bottom:0}.muted{color:#777}
+.badge{font-size:10px;border-radius:99px;padding:5px 8px;background:#f1ede4}
+.note{color:#777;font-size:12px;line-height:1.6}
+.refresh{float:right;background:#f1ede4;margin-top:-5px}
+@media(max-width:700px){.cards{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+
+.links-panel{margin-top:15px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.btn-small{background:#151515;color:#fff}
+.btn-light{background:#f1ede4;color:#222}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid .full{grid-column:1/-1}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-start;justify-content:center;padding:20px;z-index:10;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-box{width:min(520px,100%);max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;border-radius:18px;padding:20px}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{margin:0;font-size:16px}
+.close{background:#eee}
+.actions{display:flex;gap:7px;justify-content:flex-end;margin-top:14px}
+.link-row{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+.link-row:last-child{border-bottom:0}
+.link-icon{width:38px;height:38px;border-radius:11px;background:#f1ede4;display:flex;align-items:center;justify-content:center}
+.link-title{font-size:13px;font-weight:800}.link-sub{font-size:11px;color:#777;margin-top:2px}
+.row-actions{display:flex;gap:6px}.row-actions button{padding:7px 9px;font-size:11px}
+.off{opacity:.45}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.link-row{grid-template-columns:38px 1fr}.row-actions{grid-column:2}}
+
+.analytics-tools{display:grid;grid-template-columns:1fr auto auto auto;gap:9px;align-items:end;margin-top:15px}
+.analytics-tools .tool{min-width:0}
+.analytics-tools label{margin-top:0}
+.analytics-tools select,.analytics-tools input{width:100%;padding:11px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px}
+.analytics-tools button{height:42px}
+.reset-btn{background:#b42318;color:#fff}
+.custom-dates{display:none;grid-column:1/-1;grid-template-columns:1fr 1fr;gap:9px}
+.custom-dates.show{display:grid}
+.range-note{font-size:11px;color:#777;margin-top:8px}
+@media(max-width:700px){.analytics-tools{grid-template-columns:1fr 1fr}.analytics-tools .range-select{grid-column:1/-1}.analytics-tools .refresh-analytics,.analytics-tools .reset-btn{width:100%}.custom-dates{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login">
+  <div class="brand">HARTAZ</div>
+  <div class="sub">ADMIN LOGIN</div>
+  <form id="loginForm">
+    <label>Email</label>
+    <input id="email" type="email" required autocomplete="email">
+    <label>Password</label>
+    <input id="password" type="password" required autocomplete="current-password">
+    <button class="primary" type="submit">Login</button>
+    <div id="loginError" class="error"></div>
+  </form>
+</div>
+
+<div id="app" class="wrap hidden">
+  <div class="top">
+    <div><div class="brand">HARTAZ</div><div class="sub">ADMIN DASHBOARD</div></div>
+    <button id="logout" class="logout">Logout</button>
+  </div>
+
+  <section class="cards">
+    <div class="card"><div class="label">Visitors</div><div id="visitors" class="num">0</div></div>
+    <div class="card"><div class="label">WhatsApp Clicks</div><div id="whatsapp" class="num">0</div></div>
+    <div class="card"><div class="label">Link Clicks</div><div id="links" class="num">0</div></div>
+    <div class="card"><div class="label">Property Views</div><div id="properties" class="num">0</div></div>
+  </section>
+
+  <section class="panel" style="margin-top:15px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div>
+        <h2 style="margin-bottom:3px">Analytics Filter</h2>
+        <div id="analyticsRangeText" class="note">All data</div>
+      </div>
+    </div>
+    <div class="analytics-tools">
+      <div class="tool range-select">
+        <label for="analyticsRange">View Data</label>
+        <select id="analyticsRange">
+          <option value="today">Today</option>
+          <option value="7days">Last 7 Days</option>
+          <option value="15days">Last 15 Days</option>
+          <option value="month">This Month</option>
+          <option value="all" selected>All</option>
+          <option value="custom">Custom Date</option>
+        </select>
+      </div>
+      <div class="custom-dates" id="customDates">
+        <div><label for="analyticsFrom">From</label><input id="analyticsFrom" type="date"></div>
+        <div><label for="analyticsTo">To</label><input id="analyticsTo" type="date"></div>
+      </div>
+      <button id="applyAnalytics" class="btn-small refresh-analytics">Apply</button>
+      <button id="resetAnalytics" class="reset-btn">Reset All</button>
+    </div>
+    <div class="range-note">Reset All akan padam semua rekod analytics sahaja. Property dan Links tidak terjejas.</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <button id="refreshProperties" class="refresh">Refresh</button>
+      <h2>Top Properties</h2>
+      <div id="propertyList" class="muted">Loading...</div>
+    </section>
+
+    <section class="panel">
+      <h2>Top Links</h2>
+      <div id="linkList" class="muted">Loading...</div>
+    </section>
+  </div>
+
+
+  <section class="panel links-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div>
+        <h2 style="margin-bottom:3px">Link Management</h2>
+        <div class="note">Tambah, edit, hide/show dan susun link public HARTAZ.</div>
+      </div>
+      <button id="addLink" class="btn-small">+ Add Link</button>
+    </div>
+    <div id="manageLinks" style="margin-top:12px">Loading...</div>
+  </section>
+
+  <section class="panel links-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <div><h2 style="margin-bottom:3px">Property Management</h2><div class="note">Tambah, edit, delete, tukar status dan Featured property.</div></div>
+      <button id="addProperty" class="btn-small">+ Add Property</button>
+    </div>
+    <div id="manageProperties" style="margin-top:12px">Loading...</div>
+  </section>
+
+  <section class="panel">
+    <h2>Supabase Status</h2>
+    <div id="status" class="note">Checking...</div>
+  </section>
+</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL = "https://jiqequbogmshxohzicfn.supabase.co";
+const SUPABASE_KEY = "sb_publishable_hHvfFEhVBd7YAXKcxcde5w_-ZqjMz19";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const $ = id => document.getElementById(id);
+
+function showApp(){
+  $("loginScreen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  loadAnalytics();
+}
+
+function showLogin(){
+  $("app").classList.add("hidden");
+  $("loginScreen").classList.remove("hidden");
+}
+
+async function checkSession(){
+  const {data:{session}} = await supabase.auth.getSession();
+  if(session) showApp(); else showLogin();
+}
+
+$("loginForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  $("loginError").textContent = "Logging in...";
+  const {error} = await supabase.auth.signInWithPassword({
+    email:$("email").value.trim(),
+    password:$("password").value
+  });
+  if(error){
+    $("loginError").textContent = error.message;
+    return;
+  }
+  $("loginError").textContent = "";
+  showApp();
+});
+
+$("logout").addEventListener("click", async ()=>{
+  await supabase.auth.signOut();
+  showLogin();
+});
+
+function localDateString(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function localStartISO(dateString){
+  const [y,m,d]=dateString.split('-').map(Number);
+  return new Date(y,m-1,d,0,0,0,0).toISOString();
+}
+
+function localEndISO(dateString){
+  const [y,m,d]=dateString.split('-').map(Number);
+  return new Date(y,m-1,d,23,59,59,999).toISOString();
+}
+
+function getAnalyticsRange(){
+  const mode=$('analyticsRange').value;
+  const now=new Date();
+  let from=null,to=null,label='All data';
+
+  if(mode==='today'){
+    const d=localDateString(now);
+    from=localStartISO(d);
+    to=localEndISO(d);
+    label='Today';
+  }else if(mode==='7days'){
+    const d=new Date(now); d.setDate(d.getDate()-6);
+    from=localStartISO(localDateString(d));
+    to=localEndISO(localDateString(now));
+    label='Last 7 Days';
+  }else if(mode==='15days'){
+    const d=new Date(now); d.setDate(d.getDate()-14);
+    from=localStartISO(localDateString(d));
+    to=localEndISO(localDateString(now));
+    label='Last 15 Days';
+  }else if(mode==='month'){
+    const first=new Date(now.getFullYear(),now.getMonth(),1);
+    from=localStartISO(localDateString(first));
+    to=localEndISO(localDateString(now));
+    label=first.toLocaleDateString('ms-MY',{month:'long',year:'numeric'});
+  }else if(mode==='custom'){
+    const f=$('analyticsFrom').value;
+    const t=$('analyticsTo').value;
+    if(!f || !t) return {error:'Pilih tarikh From dan To dahulu.'};
+    if(f>t) return {error:'Tarikh From tidak boleh selepas tarikh To.'};
+    from=localStartISO(f);
+    to=localEndISO(t);
+    label=`${f} → ${t}`;
+  }
+  return {from,to,label};
+}
+
+async function loadAnalytics(){
+  const range=getAnalyticsRange();
+  if(range.error){
+    $('status').textContent=range.error;
+    return;
+  }
+  $('status').textContent='Loading analytics...';
+  $('analyticsRangeText').textContent=range.label;
+
+  let query=supabase.from('analytics_events').select('id,event_type,link_id,property_id,created_at').order('created_at',{ascending:false});
+  if(range.from) query=query.gte('created_at',range.from);
+  if(range.to) query=query.lte('created_at',range.to);
+
+  const {data:events,error:eventError}=await query;
+  if(eventError){
+    $('status').textContent='Unable to load analytics.';
+    console.error(eventError);
+    return;
+  }
+
+  const rows=events||[];
+  const summary={
+    visitors:rows.filter(x=>x.event_type==='page_view').length,
+    whatsapp_clicks:rows.filter(x=>x.event_type==='whatsapp_click').length,
+    link_clicks:rows.filter(x=>x.event_type==='link_click').length,
+    property_views:rows.filter(x=>x.event_type==='property_view').length
+  };
+  $('visitors').textContent=summary.visitors;
+  $('whatsapp').textContent=summary.whatsapp_clicks;
+  $('links').textContent=summary.link_clicks;
+  $('properties').textContent=summary.property_views;
+
+  const [{data:props,error:propsError},{data:links,error:linksError}]=await Promise.all([
+    supabase.from('properties').select('id,title,location,status'),
+    supabase.from('links').select('id,title,url')
+  ]);
+
+  if(propsError || linksError){
+    $('status').textContent='Analytics loaded, tetapi data property/link gagal dimuat.';
+    console.error(propsError||linksError);
+    return;
+  }
+
+  const propMap=new Map((props||[]).map(p=>[p.id,p]));
+  const linkMap=new Map((links||[]).map(l=>[l.id,l]));
+  const propCounts=new Map();
+  const linkCounts=new Map();
+
+  rows.forEach(e=>{
+    if(e.event_type==='property_view' && e.property_id) propCounts.set(e.property_id,(propCounts.get(e.property_id)||0)+1);
+    if(e.event_type==='link_click' && e.link_id) linkCounts.set(e.link_id,(linkCounts.get(e.link_id)||0)+1);
+  });
+
+  const topProps=[...propCounts.entries()]
+    .map(([id,views])=>({...(propMap.get(id)||{title:'Deleted property'}),views}))
+    .sort((a,b)=>b.views-a.views).slice(0,10);
+
+  const topLinks=[...linkCounts.entries()]
+    .map(([id,clicks])=>({...(linkMap.get(id)||{title:'Deleted link'}),clicks}))
+    .sort((a,b)=>b.clicks-a.clicks).slice(0,10);
+
+  $('propertyList').innerHTML=topProps.length
+    ? topProps.map(p=>`<div class="row"><span>${escapeHtml(p.title)}</span><span>${p.views} views</span></div>`).join('')
+    : 'Tiada property view untuk tempoh ini.';
+
+  $('linkList').innerHTML=topLinks.length
+    ? topLinks.map(l=>`<div class="row"><span>${escapeHtml(l.title)}</span><span>${l.clicks} clicks</span></div>`).join('')
+    : 'Tiada link click untuk tempoh ini.';
+
+  $('status').textContent=`Supabase connected · ${rows.length} event(s) dalam ${range.label}.`;
+}
+
+$('analyticsRange').addEventListener('change',()=>{
+  $('customDates').classList.toggle('show',$('analyticsRange').value==='custom');
+});
+
+$('applyAnalytics').addEventListener('click',loadAnalytics);
+
+$('resetAnalytics').addEventListener('click',async()=>{
+  const ok=confirm('Reset semua analytics? Semua rekod analytics akan dipadam. Property dan Links tidak akan terjejas.');
+  if(!ok)return;
+  $('status').textContent='Resetting analytics...';
+  const {error}=await supabase.from('analytics_events').delete().not('id','is',null);
+  if(error){
+    $('status').textContent='Reset gagal: '+error.message;
+    alert(error.message);
+    return;
+  }
+  await loadAnalytics();
+  alert('Analytics berjaya di-reset.');
+});
+
+$('refreshProperties').addEventListener('click',loadAnalytics);
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+supabase.auth.onAuthStateChange((_event,session)=>{
+  if(session) showApp(); else showLogin();
+});
+
+
+const propertyModal=$("propertyModal"), manageProperties=$("manageProperties");
+function openPropertyModal(p=null){
+  $("propertyForm").reset();
+  $("propertyId").value=p?.id||""; $("propertyTitle").value=p?.title||""; $("propertyLocation").value=p?.location||"";
+  $("propertyPrice").value=p?.price??""; $("propertyStatus").value=p?.status||"Available"; $("propertyBedrooms").value=p?.bedrooms??"";
+  $("propertyBathrooms").value=p?.bathrooms??""; $("propertyType").value=p?.property_type||""; $("propertyFeatured").value=String(p?.featured??false);
+  $("propertyImage").value=p?.image_url||""; $("propertyWhatsapp").value=p?.whatsapp_url||""; $("propertyDetails").value=p?.details_url||"#"; $("propertyDescription").value=p?.description||"";
+  $("propertyModalTitle").textContent=p?"Edit Property":"Add Property"; $("propertyFormError").textContent=""; propertyModal.classList.remove("hidden");
+}
+function closePropertyModal(){propertyModal.classList.add("hidden")}
+$("addProperty").addEventListener("click",()=>openPropertyModal()); $("closePropertyModal").addEventListener("click",closePropertyModal); $("cancelProperty").addEventListener("click",closePropertyModal);
+async function loadManageProperties(){
+  manageProperties.textContent="Loading...";
+  const {data,error}=await supabase.from("properties").select("*").order("featured",{ascending:false}).order("created_at",{ascending:false});
+  if(error){manageProperties.textContent="Unable to load properties: "+error.message;return}
+  if(!data.length){manageProperties.innerHTML='<div class="note">Belum ada property.</div>';return}
+  manageProperties.innerHTML=data.map(p=>`<div class="link-row ${p.featured?'':'off'}"><div class="link-icon">🏠</div><div><div class="link-title">${escapeHtml(p.title)}</div><div class="link-sub">${escapeHtml(p.location||'')} · RM${Number(p.price||0).toLocaleString('en-MY')} · ${escapeHtml(p.status)} · ${p.featured?'FEATURED':'Not featured'}</div></div><div class="row-actions"><button class="btn-light" data-pedit="${p.id}">Edit</button><button class="btn-light" data-pfeature="${p.id}">${p.featured?'Unfeature':'Feature'}</button><button class="btn-light" data-pdelete="${p.id}">Delete</button></div></div>`).join("");
+  manageProperties.querySelectorAll("[data-pedit]").forEach(b=>b.onclick=()=>openPropertyModal(data.find(x=>x.id===b.dataset.pedit)));
+  manageProperties.querySelectorAll("[data-pfeature]").forEach(b=>b.onclick=async()=>{const p=data.find(x=>x.id===b.dataset.pfeature);const {error}=await supabase.from("properties").update({featured:!p.featured}).eq("id",p.id);if(error)alert(error.message);else loadManageProperties()});
+  manageProperties.querySelectorAll("[data-pdelete]").forEach(b=>b.onclick=async()=>{const p=data.find(x=>x.id===b.dataset.pdelete);if(!confirm(`Delete "${p.title}"?`))return;const {error}=await supabase.from("properties").delete().eq("id",p.id);if(error)alert(error.message);else{loadManageProperties();loadAnalytics()}});
+}
+$("propertyForm").addEventListener("submit",async e=>{e.preventDefault();$("propertyFormError").textContent="Saving...";const payload={title:$("propertyTitle").value.trim(),location:$("propertyLocation").value.trim(),price:Number($("propertyPrice").value)||null,status:$("propertyStatus").value,bedrooms:Number($("propertyBedrooms").value)||null,bathrooms:Number($("propertyBathrooms").value)||null,property_type:$("propertyType").value.trim(),image_url:$("propertyImage").value.trim(),whatsapp_url:$("propertyWhatsapp").value.trim(),details_url:$("propertyDetails").value.trim()||"#",description:$("propertyDescription").value.trim(),featured:$("propertyFeatured").value==="true"};const id=$("propertyId").value;const result=id?await supabase.from("properties").update(payload).eq("id",id):await supabase.from("properties").insert(payload);if(result.error){$("propertyFormError").textContent=result.error.message;return}closePropertyModal();loadManageProperties();loadAnalytics()});
+
+const linkModal = $("linkModal");
+const manageLinks = $("manageLinks");
+
+function openLinkModal(link=null){
+  $("linkForm").reset();
+  $("linkId").value = link?.id || "";
+  $("linkTitle").value = link?.title || "";
+  $("linkSubtitle").value = link?.subtitle || "";
+  $("linkUrl").value = link?.url || "";
+  $("linkIcon").value = link?.icon || "🔗";
+  $("linkOrder").value = link?.sort_order ?? 0;
+  $("linkEnabled").value = String(link?.enabled ?? true);
+  $("modalTitle").textContent = link ? "Edit Link" : "Add Link";
+  $("formError").textContent = "";
+  linkModal.classList.remove("hidden");
+}
+
+function closeLinkModal(){ linkModal.classList.add("hidden"); }
+
+$("addLink").addEventListener("click",()=>openLinkModal());
+$("closeModal").addEventListener("click",closeLinkModal);
+$("cancelLink").addEventListener("click",closeLinkModal);
+
+async function loadManageLinks(){
+  manageLinks.textContent="Loading...";
+  const {data,error}=await supabase.from("links")
+    .select("*")
+    .order("sort_order",{ascending:true})
+    .order("created_at",{ascending:true});
+
+  if(error){manageLinks.textContent="Unable to load links.";return;}
+  if(!data.length){manageLinks.innerHTML='<div class="note">Belum ada link. Tekan + Add Link.</div>';return;}
+
+  manageLinks.innerHTML=data.map(l=>`
+    <div class="link-row ${l.enabled?'':'off'}">
+      <div class="link-icon">${escapeHtml(l.icon||"🔗")}</div>
+      <div>
+        <div class="link-title">${escapeHtml(l.title)}</div>
+        <div class="link-sub">${escapeHtml(l.subtitle||"")}</div>
+      </div>
+      <div class="row-actions">
+        <button class="btn-light" data-edit="${l.id}">Edit</button>
+        <button class="btn-light" data-toggle="${l.id}">${l.enabled?"Hide":"Show"}</button>
+        <button class="btn-light" data-delete="${l.id}">Delete</button>
+      </div>
+    </div>`).join("");
+
+  manageLinks.querySelectorAll("[data-edit]").forEach(b=>b.onclick=async()=>{
+    const link=data.find(x=>x.id===b.dataset.edit); openLinkModal(link);
+  });
+  manageLinks.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=async()=>{
+    const link=data.find(x=>x.id===b.dataset.toggle);
+    const {error}=await supabase.from("links").update({enabled:!link.enabled}).eq("id",link.id);
+    if(error) alert(error.message); else {loadManageLinks();loadAnalytics();}
+  });
+  manageLinks.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{
+    const link=data.find(x=>x.id===b.dataset.delete);
+    if(!confirm(`Delete "${link.title}"?`)) return;
+    const {error}=await supabase.from("links").delete().eq("id",link.id);
+    if(error) alert(error.message); else {loadManageLinks();loadAnalytics();}
+  });
+}
+
+$("linkForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  $("formError").textContent="Saving...";
+  const payload={
+    title:$("linkTitle").value.trim(),
+    subtitle:$("linkSubtitle").value.trim(),
+    url:$("linkUrl").value.trim(),
+    icon:$("linkIcon").value.trim()||"🔗",
+    sort_order:Number($("linkOrder").value)||0,
+    enabled:$("linkEnabled").value==="true"
+  };
+  const id=$("linkId").value;
+  const result=id
+    ? await supabase.from("links").update(payload).eq("id",id)
+    : await supabase.from("links").insert(payload);
+  if(result.error){$("formError").textContent=result.error.message;return;}
+  closeLinkModal();
+  await loadManageLinks();
+  await loadAnalytics();
+});
+
+const oldShowApp=showApp;
+showApp=()=>{oldShowApp();loadManageLinks();loadManageProperties();};
+
+checkSession();
+</script>
+
+<div id="propertyModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="propertyModalTitle">Add Property</h3><button id="closePropertyModal" class="close">✕</button></div>
+    <form id="propertyForm">
+      <input id="propertyId" type="hidden">
+      <div class="form-grid">
+        <div><label>Title</label><input id="propertyTitle" required></div>
+        <div><label>Location</label><input id="propertyLocation"></div>
+        <div><label>Price</label><input id="propertyPrice" type="number" min="0"></div>
+        <div><label>Status</label><select id="propertyStatus"><option>Available</option><option>Reserved</option><option>Sold</option></select></div>
+        <div><label>Bedrooms</label><input id="propertyBedrooms" type="number" min="0"></div>
+        <div><label>Bathrooms</label><input id="propertyBathrooms" type="number" min="0"></div>
+        <div><label>Property Type</label><input id="propertyType" placeholder="Semi-D"></div>
+        <div><label>Featured</label><select id="propertyFeatured"><option value="true">YES</option><option value="false">NO</option></select></div>
+        <div class="full"><label>Image URL</label><input id="propertyImage" type="url"></div>
+        <div class="full"><label>WhatsApp URL</label><input id="propertyWhatsapp" type="url" placeholder="https://wa.me/..." ></div>
+        <div class="full"><label>Details URL</label><input id="propertyDetails" type="url" placeholder="https://... atau #"></div>
+        <div class="full"><label>Description</label><textarea id="propertyDescription" style="width:100%;min-height:90px;border:1px solid #ddd;border-radius:10px;padding:12px;font:inherit"></textarea></div>
+      </div>
+      <div id="propertyFormError" class="error"></div>
+      <div class="actions"><button type="button" id="cancelProperty" class="btn-light">Cancel</button><button type="submit" class="btn-small">Save Property</button></div>
+    </form>
+  </div>
+</div>
+
+<div id="linkModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">Add Link</h3>
+      <button id="closeModal" class="close">✕</button>
+    </div>
+    <form id="linkForm">
+      <input id="linkId" type="hidden">
+      <div class="form-grid">
+        <div><label>Title</label><input id="linkTitle" required></div>
+        <div><label>Icon</label><input id="linkIcon" value="🔗"></div>
+        <div class="full"><label>Subtitle</label><input id="linkSubtitle"></div>
+        <div class="full"><label>URL</label><input id="linkUrl" type="url" placeholder="https://..." required></div>
+        <div><label>Order</label><input id="linkOrder" type="number" value="0"></div>
+        <div><label>Enabled</label><select id="linkEnabled"><option value="true">ON</option><option value="false">OFF</option></select></div>
+      </div>
+      <div id="formError" class="error"></div>
+      <div class="actions">
+        <button type="button" id="cancelLink" class="btn-light">Cancel</button>
+        <button type="submit" class="btn-small">Save Link</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
